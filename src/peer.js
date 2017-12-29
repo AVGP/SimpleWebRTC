@@ -177,7 +177,9 @@ Peer.prototype._observeDataChannel = function (channel) {
     channel.onclose = this.emit.bind(this, 'channelClose', channel);
     channel.onerror = this.emit.bind(this, 'channelError', channel);
     channel.onmessage = function (event) {
+      try {
         self.emit('channelMessage', self, channel.label, JSON.parse(event.data), channel, event);
+      } catch(e) { /* non-json msgs aren't emitted on the peer. Swallow exception */ }
     };
     channel.onopen = this.emit.bind(this, 'channelOpen', channel);
 };
